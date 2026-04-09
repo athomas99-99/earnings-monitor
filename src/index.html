@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EPS Monitor</title>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        body {
+            font-family: Calibri;
+            padding: 20px;
+        }
+        table.dataTable thead th {
+            background-color: #001F5B;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>EPS Monitor</h1>
+    <h1>Astoria Earnings Universe</h1>
+
+    // Legend
+    <div style="margin-bottom: 20px;">
+        <strong>EPS Status Legend</strong>
+        <div style="display: flex; gap: 20px; margin-top: 8px; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 20px; height: 20px; background:#FFD700; display:inline-block;"></span>
+                <span>Recently Reported</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 20px; height: 20px; background:#ADD8E6; display:inline-block;"></span>
+                <span>Soon to be Reported (≤ 7 days)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 20px; height: 20px; background:#f0f0f0; display:inline-block;"></span>
+                <span>Later to be Reported (8 days and onward)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 20px; height: 20px; background:#99ff99; display:inline-block;"></span>
+                <span>Positive Daily Returns</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 20px; height: 20px; background:#ff9999; display:inline-block;"></span>
+                <span>Negative Daily Returns</span>
+            </div>
+        </div>
+    </div>
+
+    // Column toggles
+    <div style="margin-bottom: 20px;">
+        <strong>Show / Hide Columns</strong><br><br>
+        <button id="selectAllCols">Select All Columns</button>
+        <button id="clearAllCols">Clear All Columns</button>
+        <div id="columnToggles" style="margin-top: 10px;"></div>
+    </div>
+
+    // Earnings Universe Table
+    <table id="epsTable" class="display compact" style="width:100%">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Company</th>
+                <th>Sector</th>
+                <th>Industry</th>
+                <th>Market Cap</th>
+                <th>Next EPS Date and Time</th>
+                <th>Days Since Last EPS/Days Till Next EPS</th>
+                <th>Current Quarter EPS Estimate ($)</th>
+                <th>Revenue Estimate ($)</th>
+                <th>Year Ago Sales ($)</th>
+                <th>Current Qtr Sales Growth Rate (%)</th>
+                <th>Last Reported EPS Date</th>
+                <th>Last Reported EPS ($)</th>
+                <th>Last Reported EPS Estimate ($)</th>
+                <th>Last EPS Growth Rate (%)</th>
+                <th>Last Hit/Miss ($)</th>
+                <th>Last Hit/Miss (%)</th>
+                <th>Daily Return (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+
+<script>
+
+    // Formatting functions
+    function formatCurrency(val) {
+        if (val == null) return "";
+        if (val >= 1e12) return (val / 1e12).toFixed(2) + "T";
+        if (val >= 1e9)  return (val / 1e9).toFixed(2) + "B";
+        if (val >= 1e6)  return (val / 1e6).toFixed(2) + "M";
+        return val.toFixed(2);
+    }
+
+    function formatPct(val) {
+        if (val == null) return "";
+        if (!isFinite(val)) return "N/A";
+        return val.toFixed(2) + "%";
+    }
+
+    function formatEPS(val) {
+        if (val == null) return "";
+        return val.toFixed(2);
+    }
+
+    function formatDate(val) {
+    if (val == null) return "";
+    const date = new Date(val + "T12:00:00");
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function formatDateTime(val) {
+    if (val == null) return "";
+    const date = new Date(val);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+        + " " + date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    $(document).ready(function() {
+        fetch("earnings_data.json")
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(d => {
+                // Determine row color based on EPS timing
+                let rowColor = "";
+                if (d.days_since_last_eps >= 0 && d.days_since_last_eps <= 3) {
+                    rowColor = "#FFD700";
+                } else if (d.days_till_next_eps >= 0 && d.days_till_next_eps <= 7) {
+                    rowColor = "#ADD8E6";
+                } else {
+                    rowColor = "#f0f0f0";
+                }
+
+                // Determine daily return cell color
+                let returnColor = "";
+                if (d.daily_return > 0) returnColor = "#99ff99";
+                else if (d.daily_return < 0) returnColor = "#ff9999";
+
+                $("#epsTable tbody").append(`
+                    <tr style="background-color:${rowColor}">
+                        <td>${d.ticker ?? ""}</td>
+                        <td>${d.company ?? ""}</td>
+                        <td>${d.sector ?? ""}</td>
+                        <td>${d.industry ?? ""}</td>
+                        <td>${formatCurrency(d.market_cap)}</td>
+                        <td>${formatDateTime(d.next_eps_datetime)}</td>
+                        <td>${d.days_since_last_eps ?? ""} / ${d.days_till_next_eps ?? ""}</td>
+                        <td>${formatEPS(d.current_estimate)}</td>
+                        <td>${formatCurrency(d.revenue_estimate)}</td>
+                        <td>${formatCurrency(d.year_ago_sales)}</td>
+                        <td>${formatPct(d.sales_growth_rate)}</td>
+                        <td>${formatDate(d.last_eps_date)}</td>
+                        <td>${formatEPS(d.last_actual)}</td>
+                        <td>${formatEPS(d.last_estimate)}</td>
+                        <td>${formatPct(d.last_eps_growth)}</td>
+                        <td>${formatEPS(d.hit_miss_dollar)}</td>
+                        <td>${formatPct(d.hit_miss_pct)}</td>
+                        <td style="background-color:${returnColor}; font-weight:bold">${formatPct(d.daily_return)}</td>
+                    </tr>
+                `);
+            });
+
+                var table = $("#epsTable").DataTable({order: [[5, "asc"]]});
+
+                table.columns().every(function(index) {
+                    var column = this;
+                    var columnName = $(column.header()).text();
+                    var checkbox = $(`<label style="margin-right:10px"><input type="checkbox" checked data-column="${index}"> ${columnName}</label>`);
+                    checkbox.appendTo("#columnToggles");
+                });
+
+                $("#columnToggles").on("change", "input[type='checkbox']", function() {
+                    var colIndex = $(this).data("column");
+                    var isVisible = $(this).is(":checked");
+                    table.column(colIndex).visible(isVisible);
+                });
+
+                $("#selectAllCols").on("click", function() {
+                    $("#columnToggles input[type='checkbox']").prop("checked", true).trigger("change");
+                });
+
+                $("#clearAllCols").on("click", function() {
+                    $("#columnToggles input[type='checkbox']").prop("checked", false).trigger("change");
+                });
+            });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+Ticker,Company,Sector
+AAPL,Apple Inc.,Technology
+MSFT,Microsoft Corporation,Technology
+NVDA,NVIDIA Corporation,Technology
+AMZN,Amazon.com Inc.,Consumer Discretionary
+GOOGL,Alphabet Inc. Class A,Technology
+META,Meta Platforms Inc.,Technology
+TSLA,Tesla Inc.,Consumer Discretionary
+BRK.B,Berkshire Hathaway Inc.,Financials
+JPM,JPMorgan Chase & Co.,Financials
+V,Visa Inc.,Financials
+JNJ,Johnson & Johnson,Healthcare
+UNH,UnitedHealth Group Inc.,Healthcare
+XOM,Exxon Mobil Corporation,Energy
+WMT,Walmart Inc.,Consumer Staples
+MA,Mastercard Inc.,Financials
+PG,Procter & Gamble Co.,Consumer Staples
+HD,Home Depot Inc.,Consumer Discretionary
+CVX,Chevron Corporation,Energy
+MRK,Merck & Co. Inc.,Healthcare
+ABBV,AbbVie Inc.,Healthcare
+BAC,Bank of America Corp.,Financials
+KO,Coca-Cola Company,Consumer Staples
+PEP,PepsiCo Inc.,Consumer Staples
+AVGO,Broadcom Inc.,Technology
+LLY,Eli Lilly and Company,Healthcare
+COST,Costco Wholesale Corporation,Consumer Staples
+ADBE,Adobe Inc.,Technology
+TMO,Thermo Fisher Scientific Inc.,Healthcare
+MCD,McDonald's Corporation,Consumer Discretionary
+CSCO,Cisco Systems Inc.,Technology
+ACN,Accenture PLC,Technology
+DIS,Walt Disney Company,Communication Services
+ABT,Abbott Laboratories,Healthcare
+WFC,Wells Fargo & Company,Financials
+DHR,Danaher Corporation,Healthcare
+VZ,Verizon Communications Inc.,Communication Services
+INTC,Intel Corporation,Technology
+TXN,Texas Instruments Inc.,Technology
+NFLX,Netflix Inc.,Communication Services
+PM,Philip Morris International,Consumer Staples
+RTX,RTX Corporation,Industrials
+NEE,NextEra Energy Inc.,Utilities
+QCOM,Qualcomm Inc.,Technology
+BMY,Bristol-Myers Squibb Co.,Healthcare
+INTU,Intuit Inc.,Technology
+HON,Honeywell International Inc.,Industrials
+UPS,United Parcel Service Inc.,Industrials
+AMGN,Amgen Inc.,Healthcare
+IBM,International Business Machines,Technology
+GS,Goldman Sachs Group Inc.,Financials
