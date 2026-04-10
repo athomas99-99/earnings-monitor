@@ -18,8 +18,23 @@ python fetch_earnings.py
 This generates `earnings_data.json` with the latest earnings data for all 50 tickers.
 
 ### Step 3 — Open the dashboard
-Open `src/index.html` using Live Server in VS Code, or any local web server.
-Do not open directly as a `file://` URL — the data will not load.
+Open `src/index.html` using one of these methods:
+
+**Option A: VS Code Live Server**
+1. Open VS Code and load the earnings-monitor folder
+2. Install the Live Server extension in VS Code
+3. Right-click `src/index.html` → Open with Live Server
+4. The dashboard will open automatically in your browser
+
+**Option B: Python local host**
+Run the following script in the terminal :
+```bash
+cd src
+python -m http.server 8000
+```
+Then open `http://localhost:8000` in your browser.
+
+Do NOT open index.html by double-clicking it
 
 ## Data Sources
 - Earnings data: Yahoo Finance (via direct API calls)
