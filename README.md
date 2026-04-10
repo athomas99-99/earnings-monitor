@@ -8,7 +8,7 @@ An interactive Earnings Monitor web application.
 
 ### Step 1 — Install dependencies
 ```bash
-pip install requests pandas
+pip install requests pandas yfinance
 ```
 
 ### Step 2 — Fetch live data
